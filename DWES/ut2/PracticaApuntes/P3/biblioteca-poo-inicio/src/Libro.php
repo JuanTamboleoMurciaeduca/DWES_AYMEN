@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 final class Libro
@@ -8,33 +9,34 @@ final class Libro
         public int $id,
         public string $titulo,
         public int $paginas,
-        public ?Autor $autor = null,
+        public ?Autor $autor,
         public Categoria $categoria,
         public bool $disponible = true,
-    ){
-    // Fase 3: título sin espacios en los extremos y valores por defecto si no es válido o las páginas no son positivas.
-        $tituloSinEspacios = trim($titulo);
-        if($tituloSinEspacios === ''){
+    ) {
+        // Fase 3: título sin espacios en los extremos y valores por defecto si no es válido o las páginas no son positivas.
+        $this->titulo = trim($this->titulo);
+        if ($this->titulo === '') {
             $this->titulo = 'Sin Titulo';
-        }else{
-            $this->titulo = $tituloSinEspacios;
         }
 
-        if($paginas <= 0){
+        if ($paginas <= 0) {
             $this->paginas = 1;
         }
     }
     // Fase 5: prestar(), devolver() y ficha().
-    function prestar(): void{
+    function prestar(): void
+    {
         $this->disponible = false;
     }
-    function devolver(): void{
+    function devolver(): void
+    {
         $this->disponible = true;
     }
-    function ficha(): string{
+    function ficha(): string
+    {
         $autor = $this->autor?->nombre ?? 'Sin Titulo';
         $categoria = $this->categoria->nombre;
-        $fichaCompleta = "$this->titulo / $autor / $categoria / $this->paginas paginas";
+        $fichaCompleta = "$this->titulo / $autor / $categoria / $this->paginas páginas";
         return $fichaCompleta;
     }
 }
