@@ -1,0 +1,43 @@
+*:root {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 24px;
+
+*,
+*::before,
+*::after{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+}
+body {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-areas: 
+    "encabezado  encabezado  encabezado"
+    "lateral1    principal   latreal2"
+    "pie         pie         pie";
+  grid-template-columns: 100px 1fr 100px;
+  grid-template-rows: 100px 1fr 100px;
+}
+header{
+  background-color: red;
+  grid-area: encabezado;
+}
+aside{
+  background-color: yellow;
+
+  &:nth-of-type(1){
+    grid-area: lateral1
+  }
+
+}
+main{
+  background-color: green;
+  grid-area: principal;
+
+}
+footer{
+  background-color: blue;
+  grid-area: pie;
+}

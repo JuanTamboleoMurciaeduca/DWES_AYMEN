@@ -1,0 +1,111 @@
+*:root {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 24px;
+
+*,
+*::before,
+*::after{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+}
+body {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-areas: 
+    "rojo       azul      azul"
+    "amarillo   amarillo  amarillo"
+    "gris       verde     marron"
+    "chocolate  verde     marron"
+    "chocolate  negro     oliva"
+    "cian       cian      cian";
+  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-rows: 2fr 2fr 1fr 1fr 1fr 2fr;
+}
+.div1{
+    background-color: red;
+    grid-area: rojo;
+}
+.div2{
+    background-color: blue;
+    grid-area: azul;
+}
+.div3{
+    background-color: yellow;
+    grid-area: amarillo;
+}
+.div4{
+    background-color: grey;
+    grid-area: gris;
+}
+.div5{
+    background-color: green;
+    grid-area: verde;
+}
+.div6{
+    background-color: brown;
+    grid-area: marron;
+}
+.div7{
+    background-color: chocolate;
+    grid-area:chocolate;
+}
+.div8{
+    background-color: black;
+    grid-area: negro;
+    color: white;
+}
+.div9{
+    background-color: olive;
+    grid-area:oliva;
+}
+.div10{
+    background-color: cyan;
+    grid-area: cian;
+}
+
+/*div{
+    &:nth-of-type(1){
+        background-color: red;
+        grid-area: rojo;
+    }
+    &:nth-of-type(2){
+        background-color: blue;
+        grid-area: azul;
+    }
+    &:nth-of-type(3){
+        background-color: yellow;
+        grid-area: amarillo;
+    }
+    &:nth-of-type(4){
+        background-color: grey;
+        grid-area: gris;
+    }
+    &:nth-of-type(5){
+        background-color: green;
+        grid-area: verde;
+    }
+    &:nth-of-type(6){
+        background-color: brown;
+        grid-area: marron;
+    }
+    &:nth-of-type(7){
+        background-color: chocolate;
+        grid-area:chocolate;
+    }
+    &:nth-of-type(8){
+        background-color: black;
+        grid-area: negro;
+        color: white;
+    }
+    &:nth-of-type(9){
+        background-color: olive;
+        grid-area:oliva;
+    }
+    &:nth-of-type(10){
+        background-color: cyan;
+        grid-area: cian;
+    }
+}
+*/

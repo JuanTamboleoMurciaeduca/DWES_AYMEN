@@ -23,11 +23,11 @@ div{
     }
     &:nth-child(2){
         background-color: blue;
-        grid-column: 2 / 2 span;
+        grid-column:  2 span;
     }
     &:nth-child(3){
         background-color: yellow;
-        grid-column: 3 span;
+        grid-column: 3 span ;
     }
     &:nth-child(4){
         background-color:  grey;
@@ -37,18 +37,18 @@ div{
         grid-row: 2 span;
     }
     &:nth-child(6){
-        background-color:crimson;
+        background-color:brown;
         grid-row: 2 span;
     }
     &:nth-child(7){
-        background-color:coral;
+        background-color:chocolate;
         grid-row: 2 span;
     }
     &:nth-child(8){
         background-color: black;
     }
     &:nth-child(9){
-        background-color:darkolivegreen ;
+        background-color:olive;
     }
     &:nth-child(10){
         background-color: cyan;

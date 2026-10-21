@@ -1,0 +1,41 @@
+:root {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 24px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body{
+    min-height: 100dvh;
+
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto 1fr auto;
+    /*grid-template: auto 1fr auto / (ROW)
+                     auto 1fr auto   (COLUMN)   
+    */
+}
+aside{
+    background-color: grey;
+    writing-mode: sideways-lr;
+    text-align: center;
+}
+footer, header{
+    background-color: black;
+    color: white;
+    grid-column: span 3;
+
+}
+aside:nth-of-type(2){
+    grid-column: 3 ;
+}
+main{
+    grid-row: 2;
+    grid-column:2
+}
