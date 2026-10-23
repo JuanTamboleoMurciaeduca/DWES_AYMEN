@@ -26,15 +26,16 @@ function normalizar(string $texto): string
 function buscarPorId(array $actividades, int $id): ?Actividad
 {
     // TODO F3. Usa array_find con un callback tipado.
-    throw new LogicException("Pendiente: buscarPorId.");
+    $actividad = array_find($actividades, fn(array $a) => $a['id'] === $id);
+    return $actividad;
 }
 
 function filtrarActividades(
     array $actividades, string $texto, string $tipo,
     ?EstadoActividad $estado, bool $soloDisponibles
 ): array {
-    // TODO F4. Combina las cuatro condiciones mediante array_filter.
-    throw new LogicException("Pendiente: filtrarActividades.");
+    // TODO F4. Combina las cuatro condiciones mediante array_filter.   
+    
 }
 
 function ordenarActividades(array $actividades, string $orden): array

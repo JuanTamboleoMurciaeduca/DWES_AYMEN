@@ -12,7 +12,7 @@ abstract class Actividad implements Reservable{
     private readonly EstadoActividad $estado;
     private readonly ?Responsable $responsable; 
 
-    function __construct(int $id, string $nombre, int $capacidad, int $ocupadas,EstadoActividad $estado, Responsable $responsable)
+    function __construct(int $id, string $nombre, int $capacidad, int $ocupadas,EstadoActividad $estado, ?Responsable $responsable)
     {
         if($id < 0){
             throw new InvalidArgumentException('Dato invalido, el id tiene que ser positivo');
@@ -32,21 +32,21 @@ abstract class Actividad implements Reservable{
             $this->capacidad = $capacidad;
         }
 
-        if($ocupadas > 0 && $ocupadas < $capacidad ){
+        if($ocupadas < 0 && $ocupadas > $capacidad ){
             throw new InvalidArgumentException('Dato invalido, ocupadas tiene que ser mayor que cero y menor que la capacidad');
         }else{
             $this->ocupadas = $ocupadas;
         }
 
-        if($estado != EstadoActividad::Abierta || $estado != EstadoActividad::Cerrada){
-            throw new InvalidArgumentException('Dato invalido, la actividad solo puede estar cerrada o abierta');
-        }else{
+        if($estado === EstadoActividad::Abierta || $estado === EstadoActividad::Cerrada){
             $this->estado =  $estado;
-        }
-        if($responsable != null || $responsable ){
-            throw new InvalidArgumentException('Dato invalido, responsable solo pude ser un objeto resposable o null');
         }else{
+            throw new InvalidArgumentException('Dato invalido, la actividad solo puede estar cerrada o abierta');
+        }
+        if($responsable === null || $responsable instanceof Responsable ){
             $this->responsable = $responsable;
+        }else{
+            throw new InvalidArgumentException('Dato invalido, responsable solo pude ser un objeto resposable o null');
         }
     }
     public function id(): int{
@@ -64,7 +64,7 @@ abstract class Actividad implements Reservable{
     public function estado(): EstadoActividad{
         return $this->estado; 
     }
-    public function responsable(): Responsable{
+    public function responsable(): ?Responsable{
         return $this->responsable; 
     }
 
