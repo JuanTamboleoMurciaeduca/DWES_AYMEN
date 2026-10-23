@@ -1,0 +1,9 @@
+GET https://dummyjson.com/products
+
+### standard
+
+GET https://dummyjson.com/products?delay=1000
+
+### friendly route
+
+GET https://dummyjson.com/products/17?delay=1000
