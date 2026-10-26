@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 function entrada(array $origen, string $clave, string $defecto = ''): string
@@ -13,7 +14,12 @@ function entrada(array $origen, string $clave, string $defecto = ''): string
 function enteroPositivo(string $valor): int
 {
     // TODO F2. Valida antes de convertir; rechaza con InvalidArgumentException.
-    throw new LogicException("Pendiente: enteroPositivo.");
+    // Falta
+    $numero = filter_var($valor, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+    if ($numero === false) {
+        throw new InvalidArgumentException('Indica un entero positivo.');
+    }
+    return $numero;
 }
 
 function limpiarEspacios(string $texto): string
@@ -29,13 +35,15 @@ function normalizar(string $texto): string
 function buscarPorId(array $actividades, int $id): ?Actividad
 {
     // TODO F3. Usa array_find con un callback tipado.
-    $actividad = array_find($actividades, fn(Actividad $a) => $a->id() === $id);
-    return $actividad;
+    return array_find($actividades, fn(Actividad $a): bool => $a->id() === $id);
 }
 
 function filtrarActividades(
-    array $actividades, string $texto, string $tipo,
-    ?EstadoActividad $estado, bool $soloDisponibles
+    array $actividades,
+    string $texto,
+    string $tipo,
+    ?EstadoActividad $estado,
+    bool $soloDisponibles
 ): array {
     // TODO F4. Combina las cuatro condiciones mediante array_filter.   
     $textoNormalizado = normalizar($texto);
@@ -54,7 +62,13 @@ function filtrarActividades(
 function ordenarActividades(array $actividades, string $orden): array
 {
     // TODO F5. Ordena una copia con usort y desempata por id.
-    throw new LogicException("Pendiente: ordenarActividades.");
+    usort($actividades, function (Actividad $a, Actividad $b) use ($orden): int {
+        $comparacion = $orden === 'libres'
+            ? $a->plazasLibres() <=> $b->plazasLibres()
+            : normalizar($a->nombre()) <=> normalizar($b->nombre());
+        return $comparacion !== 0 ? $comparacion : $a->id() <=> $b->id();
+    });
+    return $actividades;
 }
 
 function transformarActividades(array $actividades, callable $transformacion): array
@@ -63,11 +77,11 @@ function transformarActividades(array $actividades, callable $transformacion): a
 }
 
 function generarEtiquetas(
-    array $actividades, string $prefijo = 'Actividad: '
-): array
-{
+    array $actividades,
+    string $prefijo = 'Actividad: '
+): array {
     // TODO F6. Usa transformarActividades y una closure con use.
-    
+
     $etiquetas = transformarActividades($actividades, function (Actividad $actividad) use ($prefijo): string {
         return $actividad->etiqueta($prefijo);
     });
