@@ -1,0 +1,19 @@
+{
+    "name": "aula/demo",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Aymen Hadane El Mouadan",
+            "email": "6314422@alu.murciaeduca.es"
+        }
+    ],
+    "require": {},
+    "scripts": {
+        "envios": "@php envios.php"
+    }
+}
