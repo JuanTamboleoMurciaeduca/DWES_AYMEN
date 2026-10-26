@@ -4,7 +4,10 @@ declare(strict_types=1);
 function entrada(array $origen, string $clave, string $defecto = ''): string
 {
     // TODO F1. Lee solo cadenas y aplica el valor por defecto.
-    throw new LogicException("Pendiente: entrada.");
+    if (isset($origen[$clave]) && is_string($origen[$clave])) {
+        return $origen[$clave];
+    }
+    return $defecto;
 }
 
 function enteroPositivo(string $valor): int
@@ -26,7 +29,7 @@ function normalizar(string $texto): string
 function buscarPorId(array $actividades, int $id): ?Actividad
 {
     // TODO F3. Usa array_find con un callback tipado.
-    $actividad = array_find($actividades, fn(array $a) => $a['id'] === $id);
+    $actividad = array_find($actividades, fn(Actividad $a) => $a->id() === $id);
     return $actividad;
 }
 
@@ -35,7 +38,17 @@ function filtrarActividades(
     ?EstadoActividad $estado, bool $soloDisponibles
 ): array {
     // TODO F4. Combina las cuatro condiciones mediante array_filter.   
-    
+    $textoNormalizado = normalizar($texto);
+
+    $filtrar = array_filter($actividades, function (Actividad $actividad) use ($textoNormalizado, $tipo, $estado, $soloDisponibles): bool {
+        $coincideTexto = $textoNormalizado === '' || str_contains(normalizar($actividad->nombre()), $textoNormalizado);
+        $coincideTipo = $tipo === '' || $actividad->tipo() === $tipo;
+        $coincideEstado = $estado === null || $actividad->estado() === $estado;
+        $coincideDisponibles = !$soloDisponibles || ($actividad->estado() === EstadoActividad::Abierta && $actividad->plazasLibres() > 0);
+        return $coincideTexto && $coincideTipo && $coincideEstado && $coincideDisponibles;
+    });
+    $resultado = array_values($filtrar);
+    return $resultado;
 }
 
 function ordenarActividades(array $actividades, string $orden): array
@@ -54,13 +67,31 @@ function generarEtiquetas(
 ): array
 {
     // TODO F6. Usa transformarActividades y una closure con use.
-    throw new LogicException("Pendiente: generarEtiquetas.");
+    
+    $etiquetas = transformarActividades($actividades, function (Actividad $actividad) use ($prefijo): string {
+        return $actividad->etiqueta($prefijo);
+    });
+    return $etiquetas;
 }
 
 function resumirActividades(array $actividades): array
 {
     // TODO F7. Calcula las cinco magnitudes con array_reduce.
-    throw new LogicException("Pendiente: resumirActividades.");
+    $resumen = array_reduce($actividades, function (array $aux, Actividad $actividad): array {
+        $acumulador['cantidad'] = $aux['cantidad'] + 1;
+        $acumulador['capacidad'] = $aux['capacidad'] + $actividad->capacidad();
+        $acumulador['ocupadas'] = $aux['ocupadas'] + $actividad->ocupadas();
+        $acumulador['libres'] = $aux['libres'] + $actividad->plazasLibres();
+        $acumulador['importe'] = $aux['importe'] + $actividad->importe($actividad->ocupadas());
+        return $acumulador;
+    }, [
+        'cantidad' => 0,
+        'capacidad' => 0,
+        'ocupadas' => 0,
+        'libres' => 0,
+        'importe' => 0,
+    ]);
+    return $resumen;
 }
 
 function e(string $texto): string
