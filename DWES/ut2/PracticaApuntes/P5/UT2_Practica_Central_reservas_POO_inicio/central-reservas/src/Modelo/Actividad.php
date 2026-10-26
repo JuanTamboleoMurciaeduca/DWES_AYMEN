@@ -14,7 +14,7 @@ abstract class Actividad implements Reservable{
 
     function __construct(int $id, string $nombre, int $capacidad, int $ocupadas,EstadoActividad $estado, ?Responsable $responsable)
     {
-        if($id < 0){
+        if($id <= 0){
             throw new InvalidArgumentException('Dato invalido, el id tiene que ser positivo');
         }else{
             $this->id = $id;
@@ -26,7 +26,7 @@ abstract class Actividad implements Reservable{
             $this->nombre = $nombre;
         }
 
-        if($capacidad < 0){
+        if($capacidad <= 0){
             throw new InvalidArgumentException('Dato invalido, la capacidad tiene que ser un entero mayor que cero');
         }else{
             $this->capacidad = $capacidad;

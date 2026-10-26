@@ -8,12 +8,12 @@ final class ActividadPago extends Actividad{
     private readonly int $precioCentimos;
     function __construct(int $id, string $nombre, int $capacidad, int $ocupadas, EstadoActividad $estado, Responsable $responsable, int $precioCentimos)
     {
-        parent::__construct($id, $nombre, $capacidad, $ocupadas, $estado, $responsable);
         if($precioCentimos <= 0){
             throw new InvalidArgumentException('Precio negativo o igual a cero, no es valido');       
         }else{
            $this->precioCentimos = $precioCentimos;
         }
+        parent::__construct($id, $nombre, $capacidad, $ocupadas, $estado, $responsable);
     }
     #[Override]
     function tipo(): string
