@@ -42,7 +42,7 @@ abstract class Alquiler {
         if($this->estado() === EstadoAlquiler::Finalizado){
             $this->estado = EstadoAlquiler::Activo;
         }else{
-            throw new AlquilerException('El estado del alquiler tiene que satr finalizado');
+            throw new AlquilerException('El estado del alquiler tiene que estar finalizado');
         }
     }
     public function finalizar(): void{
