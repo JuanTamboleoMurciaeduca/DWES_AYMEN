@@ -11,28 +11,34 @@ use InvalidArgumentException;
 
 final class CatalogoService
 {
-    public function __construct(private CursoRepository $repository)
-    {
-    }
+    public function __construct(private CursoRepository $repository) {}
 
-    public function filtrar(string $texto = '', ?EstadoCurso $estado = null, bool $soloConPlazas = false): array{
+    public function filtrar(string $texto = '', ?EstadoCurso $estado = null, bool $soloConPlazas = false): array
+    {
         $texto = mb_strtolower(trim($texto), 'UTF-8');
         // TODO F1: filtra los cursos mediante array_filter.
 
-        /* array_filter($this->repository->todos(),
-        function () {
-            if($this->nombre){
-
-            }
-        } */
-        
-        ) 
+        // No ibas mal encaminado, pero necesitas repasar este tipo de funciones
+        return array_values(array_filter(
+            $this->repository->todos(),
+            fn(Curso $c): bool =>
+            str_contains($c->nombreNormalizado(), $texto) &&
+                ($estado === null || $c->estado() === $estado) &&
+                (!$soloConPlazas || ($c->plazasLibres() > 0 && $c->estado() === EstadoCurso::Abierto))
+        ));
     }
 
     public function ordenar(array $cursos): array
     {
         // TODO F2: ordena una copia mediante usort y un callback.
-        return usort($cursos, fn(Curso $a, Curso $b): array => $a->precioPlaza() <=> $b->precioPlaza() && $a->id() <=> $b->id());    
+        usort(
+            $cursos,
+            fn(Curso $a, Curso $b) => (($a->precioPlaza() <=> $b->precioPlaza()) === 0)
+                ? ($a->id() <=> $b->id())
+                : ($a->precioPlaza() <=> $b->precioPlaza())
+        );
+
+        return $cursos;
     }
 
     public function etiquetas(array $cursos, string $prefijo = 'Curso: '): array
@@ -44,13 +50,19 @@ final class CatalogoService
     public function resumen(array $cursos): array
     {
         // TODO F4: calcula las tres cifras mediante array_reduce.
-        return array_reduce($cursos, 
-            function (array $acumulado, $cursos){
-                $acumulado['cantidad'] = count($cursos);
-                $acumulado['libres'] = $cursos->plazasLibres();
-                $acumulado['importCentimos'] = $cursos->ocupadas * $cursos->precioBaseCentimos;
-            });
-
+        return array_reduce(
+            $cursos,
+            function (array $acumulado, $cursos) {
+                // Por cada elemento sumamos 1
+                $acumulado['cantidad'] += 1;
+                // Sumamos plazasLibres en vez de asignar
+                $acumulado['libres'] += $cursos->plazasLibres();
+                // Lo mismo, le sumamos eso en lugar de asignar
+                $acumulado['importCentimos'] += ($cursos->ocupadas * $cursos->precioBaseCentimos);
+            },
+            // Falta iniciar el acumulador
+            ['cantidad' => 0, 'libres' => 0, 'importeCentimos' => 0]
+        );
     }
 
     public function buscarOpciones(int $plazas, int $presupuestoCentimos): array
@@ -62,13 +74,14 @@ final class CatalogoService
 
         $candidatos = array_filter(
             $this->repository->todos(),
-            fn (Curso $curso): bool =>
-                $curso->estado() === EstadoCurso::Abierto
-                || $curso->plazasLibres() >= $plazas
+            fn(Curso $curso): bool =>
+            $curso->estado() === EstadoCurso::Abierto
+                // Cambiar esta condición
+                && $curso->plazasLibres() >= $plazas
         );
 
         $propuestas = array_map(
-            fn (Curso $curso): array => [
+            fn(Curso $curso): array => [
                 'id' => $curso->id(),
                 'importeCentimos' => $curso->precioPlaza() * $plazas,
                 'libresDespues' => $curso->plazasLibres() - $plazas
@@ -76,33 +89,29 @@ final class CatalogoService
             $candidatos
         );
 
-        
+        // Pero si esto os lo he dado hecho!
         $resultado = array_reduce(
             $propuestas,
             function (array $acumulado, array $propuesta) use ($presupuestoCentimos): array {
-                $disponible = $presupuestoCentimos - $acumulado['importeAcumulado'];
-                
                 if ($propuesta['importeCentimos'] <= $presupuestoCentimos) {
-                    $acumulado['opciones'] = [$propuesta];
-                    $acumulado['importeAcumulado'] += $propuesta['importeCentimos'];
+                    $acumulado[] = $propuesta;
                 }
-                
+
                 return $acumulado;
             },
-            ['opciones' => [], 'importeAcumulado' => 0]
-            );
+            []
+        );
 
-         usort(
+        usort(
             $resultado,
-            fn (array $a, array $b): int =>
-                (($a['importeCentimos'] <=> $b['importeCentimos']) !== 0)
-                    ? ($a['importeCentimos'] <=> $b['importeCentimos'])
-                    : ($a['id'] <=> $b['id'])
-            );
-            
+            fn(array $a, array $b): int => (($a['importeCentimos'] <=> $b['importeCentimos']) !== 0)
+                ? ($a['importeCentimos'] <=> $b['importeCentimos'])
+                : ($a['id'] <=> $b['id'])
+        );
+
         return $resultado;
     }
-    
+
     private function requerido(int $id): Curso
     {
         return $this->repository->buscarPorId($id)
@@ -118,10 +127,12 @@ final class CatalogoService
     {
         $this->requerido($id)->cancelar($cantidad);
     }
-    public function planificarReserva(int $plazas,int $presupuestoCentimos): array{
-        /* if($plazas <= 0 || $presupuestoCentimos < 0){
-            throw new InvalidArgumentException('Las plazas no pueden ser menores o iguales a 0 y el presupuseto no puede ser menor que 0');
-        }
-        return  */
-    }
+
+    // public function planificarReserva(int $plazas, int $presupuestoCentimos): array
+    // {
+    //     /* if($plazas <= 0 || $presupuestoCentimos < 0){
+    //         throw new InvalidArgumentException('Las plazas no pueden ser menores o iguales a 0 y el presupuseto no puede ser menor que 0');
+    //     }
+    //     return  */
+    // }
 }

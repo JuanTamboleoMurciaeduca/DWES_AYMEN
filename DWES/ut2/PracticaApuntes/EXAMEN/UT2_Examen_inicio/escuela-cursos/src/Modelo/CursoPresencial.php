@@ -9,7 +9,7 @@ use Override;
 
 final class CursoPresencial extends Curso
 {
-   
+
     public function __construct(
         int $id,
         string $nombre,
@@ -22,10 +22,10 @@ final class CursoPresencial extends Curso
         // TODO M0: valida los materiales e inicializa la parte heredada.
 
         parent::__construct($id, $nombre, $capacidad, $ocupadas, $estado, $precioBaseCentimos);
-        if($materialesCentimos < 0){
+        if ($materialesCentimos < 0) {
             throw new InvalidArgumentException('Valores negativos no permitidos en Materiales Centimos');
         }
-        $this->materialesCentimos = $materialesCentimos;
+        // No hace falta, al usar promoción ya está asignado.
     }
 
 
@@ -37,7 +37,6 @@ final class CursoPresencial extends Curso
     public function precioPlaza(): int
     {
         // TODO M1: calcula el precio de una plaza presencial.
-        $suma = $this->precioBaseCentimos + $this->materialesCentimos;
-        return $suma;
+        return $this->precioBaseCentimos + $this->materialesCentimos;
     }
 }
