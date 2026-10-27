@@ -1,0 +1,61 @@
+*, *::before, *::after{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    height: 100dvh;
+    place-items: center;
+    place-content: center;
+}
+.running{
+    animation-play-state: running !important;
+    display: block !important;
+}
+
+.spinner {
+    display: none;
+    width: 300px;
+    aspect-ratio: 1;
+/*     border: solid 20px transparent; */
+    border-top: solid 20px red;
+    border-radius: 50%;
+    position: relative;
+    animation-duration: 3000ms;
+    animation-name: spin;
+    animation-timing-function:linear;
+    animation-iteration-count: infinite;
+    animation-play-state: paused;
+
+    &::before, &::after{
+        content: "";
+        position: absolute;
+        display: inline-block;
+        aspect-ratio: 1;
+        border-radius: inherit;
+        inset: 0;
+        margin: auto;
+        animation: inherit;
+        animation-duration: 3000ms; 
+        
+    }&::before {
+        width: 200px;
+        /*     border: solid 20px transparent; */
+        border-top: solid 20px rgb(30, 255, 0);
+        animation-direction: reverse;
+        animation-duration: 1s;
+    }
+    &::after {
+        width: 100px;
+/*     border: solid 20px transparent; */
+        border-top: solid 20px rgb(38, 0, 255);
+    }
+}
+@keyframes spin{
+    from{
+        transform: rotate(0turn);
+    }
+    to {
+        transform: rotate(1turn);
+    }
+}
